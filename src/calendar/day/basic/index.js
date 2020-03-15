@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
-import {View, TouchableOpacity, Text} from 'react-native';
+import React, { Component } from 'react';
+import { View, TouchableOpacity, Text } from 'react-native';
 import PropTypes from 'prop-types';
-import {shouldUpdate} from '../../../component-updater';
-
+import { shouldUpdate } from '../../../component-updater';
+import LinearGradient from 'react-native-linear-gradient'
 import styleConstructor from './style';
 
 
 class Day extends Component {
   static displayName = 'IGNORE';
-  
+
   static propTypes = {
     // TODO: disabled props should be removed
     state: PropTypes.oneOf(['disabled', 'today', '']),
@@ -44,16 +44,16 @@ class Day extends Component {
     const containerStyle = [this.style.base];
     const textStyle = [this.style.text];
     const dotStyle = [this.style.dot];
-    
+
     let marking = this.props.marking || {};
     if (marking && marking.constructor === Array && marking.length) {
       marking = {
         marking: true
       };
     }
-    
+
     const isDisabled = typeof marking.disabled !== 'undefined' ? marking.disabled : this.props.state === 'disabled';
-    
+
     let dot;
     if (marking.marked) {
       dotStyle.push(this.style.visibleDot);
@@ -61,15 +61,15 @@ class Day extends Component {
         dotStyle.push(this.style.disabledDot);
       }
       if (marking.dotColor) {
-        dotStyle.push({backgroundColor: marking.dotColor});
+        dotStyle.push({ backgroundColor: marking.dotColor });
       }
-      dot = (<View style={dotStyle}/>);
+      dot = (<View style={dotStyle} />);
     }
 
     if (marking.selected) {
       containerStyle.push(this.style.selected);
       if (marking.selectedColor) {
-        containerStyle.push({backgroundColor: marking.selectedColor});
+        containerStyle.push({ backgroundColor: marking.selectedColor });
       }
       dotStyle.push(this.style.selectedDot);
       textStyle.push(this.style.selectedText);
@@ -92,8 +92,15 @@ class Day extends Component {
         accessibilityRole={isDisabled ? undefined : 'button'}
         accessibilityLabel={this.props.accessibilityLabel}
       >
-        <Text allowFontScaling={false} style={textStyle}>{String(this.props.children)}</Text>
-        {dot}
+        <LinearGradient
+          colors={this.props.state === 'today' ? ["#F9C151", "#F77924"] : ["transparent", "transparent"]}
+          start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+          style={containerStyle}
+        >
+          <Text allowFontScaling={false} style={textStyle}>{String(this.props.children)}</Text>
+          {dot}
+        </LinearGradient>
+
       </TouchableOpacity>
     );
   }
